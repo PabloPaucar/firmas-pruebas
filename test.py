@@ -14,8 +14,8 @@ def generar_firma_banco_final(datos):
     font_book = ImageFont.truetype("Gotham-Book.ttf", 18)
 
     # --- 3. COORDENADAS CON ESPACIADO AMPLIADO ---
-    x_base = 220 
-    x_sangria = 235 # Ajuste leve para compensar el aire extra
+    x_base = 240 
+    x_sangria = 265 # Ajuste leve para compensar el aire extra
     y_start = 25
     y_current = y_start
     max_x = 0
