@@ -53,7 +53,7 @@ def generar_firma_banco_final(datos):
         st.error("Error: No se encontraron las fuentes .ttf en el servidor.")
         return None
 
-    x_base, x_sangria = 240, 265 
+    x_base, x_sangria = 240, 255 
     y_start = 30
     y_current = y_start
     max_x = 0
