@@ -9,10 +9,6 @@ st.set_page_config(page_title="Generador de Firmas - Banco Solidario", page_icon
 # CSS personalizado para la identidad del banco
 st.markdown("""
     <style>
-    /* Color de fondo principal */
-    .stApp {
-        background-color: #f8f9fa;
-    }
     /* Estilo para los títulos y subheaders */
     h1, h2, h3 {
         color: #23b5d6 !important;
