@@ -28,13 +28,18 @@ st.markdown("""
         font-family: 'Inter', 'Segoe UI', Roboto, sans-serif !important;
     }
 
+    /* NUEVO: Centrado vertical de elementos en columnas (Logo y Texto) */
+    div[data-testid="stHorizontalBlock"] {
+        align-items: center !important;
+    }
+
     .block-container {
         padding-top: 1.5rem !important; 
         margin-top: -30px; 
     }
 
     .main-title-container {
-        padding-top: 2px;
+        /* padding-top eliminado porque ahora se centra automáticamente */
         line-height: 1.0;
     }
 
@@ -73,10 +78,12 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. HEADER COMPACTO ---
-col_logo, col_titulo = st.columns([1, 4])
+# --- 3. HEADER COMPACTO (CENTRADO) ---
+# Ajustamos ligeramente la proporción de columnas para dar más aire
+col_logo, col_titulo = st.columns([1, 5]) 
 with col_logo:
     try:
+        # Mantenemos el tamaño grande, el CSS se encarga de centrar el texto
         st.image("logofban.png", width=100)
     except:
         st.write("🏦")
@@ -89,11 +96,14 @@ with col_titulo:
         </div>
     """, unsafe_allow_html=True)
 
-st.markdown('<div style="border-bottom: 2px solid #23b5d6; margin-bottom: 25px; margin-top: 10px;"></div>', unsafe_allow_html=True)
+st.markdown('<div style="border-bottom: 2px solid #23b5d6; margin-bottom: 25px; margin-top: 15px;"></div>', unsafe_allow_html=True)
 
-# --- 4. FUNCIÓN GENERADORA DE IMAGEN ---
+# --- [EL RESTO DEL CÓDIGO (FUNCIONES Y FORMULARIO) SIGUE IGUAL] ---
+# ... (Pega aquí desde la sección 4 hacia abajo del código anterior)
+# --- 4. FUNCIÓN GENERADORA CORREGIDA ---
 def generar_imagen_firma(datos):
-    canvas_w, canvas_h = 600, 130 
+    # CORRECCIÓN: Aumentamos el lienzo a 150 de alto para evitar la línea negra
+    canvas_w, canvas_h = 600, 150 
     im = Image.new('RGB', (canvas_w, canvas_h), (255, 255, 255))
     draw = ImageDraw.Draw(im)
     try:
@@ -128,6 +138,8 @@ def generar_imagen_firma(datos):
         logo_res = logo_f.resize((int(h_logo * (logo_f.width/logo_f.height)), h_logo), Image.Resampling.LANCZOS)
         im.paste(logo_res, (15, 15), logo_res if logo_res.mode == 'RGBA' else None)
     except: pass
+    
+    # El recorte ahora se hace sobre un lienzo seguro, garantizando fondo blanco
     return im.crop((0, 0, max_x + 20, y_curr + 20))
 
 # --- 5. FORMULARIO ---
