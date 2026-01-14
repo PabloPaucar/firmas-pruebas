@@ -4,78 +4,94 @@ import io
 import re
 
 # --- 1. CONFIGURACIÓN DE PÁGINA ---
-# Cargamos la imagen para usarla como ícono de la pestaña
 try:
     logo_icon = Image.open("logofban.png")
 except:
-    logo_icon = "🏦" # Backup por si no encuentra el archivo
+    logo_icon = "🏦"
 
 st.set_page_config(
     page_title="Generador de Firmas - Banco Solidario", 
-    page_icon=logo_icon, # AQUÍ SE PONE EL LOGO DEL BANCO
+    page_icon=logo_icon, 
     layout="centered"
 )
 
-# CSS para Header Ultra-Compacto y eliminación de espacios en blanco
+# --- 2. CSS PARA DISEÑO CORPORATIVO Y LIMPIO ---
 st.markdown("""
     <style>
-    /* ELIMINAR ESPACIO SUPERIOR VACÍO DE STREAMLIT */
-    .block-container {
-        padding-top: 0.5rem !important; 
-        padding-bottom: 0rem !important;
-    }
+    /* Ocultar elementos nativos de Streamlit */
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+    #MainMenu {visibility: hidden;}
+    .stDeployButton {display:none;}
     
-    /* HEADER COMPACTO */
-    .header-box {
-        display: flex;
-        align-items: center;
-        border-bottom: 2px solid #23b5d6;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
+    html, body, [class*="st-"] {
+        font-family: 'Inter', 'Segoe UI', Roboto, sans-serif !important;
+    }
+
+    .block-container {
+        padding-top: 1.5rem !important; 
+        margin-top: -30px; 
+    }
+
+    .main-title-container {
+        padding-top: 2px;
+        line-height: 1.0;
+    }
+
+    .main-title-text {
+        color: #23b5d6;
+        font-size: 38px;
+        font-weight: 800;
+        font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+        letter-spacing: -1px;
+    }
+
+    .sub-title-text {
+        color: #555;
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
     }
 
     .section-header {
         color: #23b5d6;
-        font-family: 'Arial', sans-serif;
-        font-size: 16px;
-        font-weight: bold;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        font-family: 'Segoe UI Bold', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        border-left: 4px solid #23b5d6;
+        padding-left: 10px;
     }
 
-    /* BOTONES */
-    div.stButton > button:first-child {
-        background-color: #23b5d6;
-        color: white !important;
-        border-radius: 6px;
-        height: 3em;
-        font-weight: bold;
+    /* Botones con estilo estándar (Normal) */
+    div.stButton > button:first-child, div.stDownloadButton > button:first-child {
         width: 100%;
-        border: none;
+        height: 3.5em;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- HEADER COMPACTO ---
-col_logo, col_titulo = st.columns([1, 5])
-
+# --- 3. HEADER COMPACTO ---
+col_logo, col_titulo = st.columns([1, 4])
 with col_logo:
     try:
-        st.image("logofban.png", width=80)
+        st.image("logofban.png", width=100)
     except:
         st.write("🏦")
 
 with col_titulo:
     st.markdown(f"""
-        <div style="padding-top: 0px;">
-            <span style="color: #23b5d6; font-size: 26px; font-weight: bold;">Generador de Firmas</span><br>
-            <span style="color: #666; font-size: 13px;">Banco Solidario - Herramienta de Autogestión</span>
+        <div class="main-title-container">
+            <span class="main-title-text">Generador de Firmas</span><br>
+            <span class="sub-title-text">Herramienta de Autogestión — Banco Solidario</span>
         </div>
     """, unsafe_allow_html=True)
 
-st.markdown('<div style="border-bottom: 2px solid #23b5d6; margin-bottom: 20px; margin-top: -10px;"></div>', unsafe_allow_html=True)
+st.markdown('<div style="border-bottom: 2px solid #23b5d6; margin-bottom: 25px; margin-top: 10px;"></div>', unsafe_allow_html=True)
 
-# --- FUNCIÓN DE IMAGEN ---
+# --- 4. FUNCIÓN GENERADORA DE IMAGEN ---
 def generar_imagen_firma(datos):
     canvas_w, canvas_h = 600, 130 
     im = Image.new('RGB', (canvas_w, canvas_h), (255, 255, 255))
@@ -114,28 +130,32 @@ def generar_imagen_firma(datos):
     except: pass
     return im.crop((0, 0, max_x + 20, y_curr + 20))
 
-# --- FORMULARIO ---
+# --- 5. FORMULARIO ---
 with st.container():
     with st.form("main_form"):
-        st.markdown('<div class="section-header">Datos del Colaborador</div>', unsafe_allow_html=True)
-        nombres = st.text_input("Nombres")
-        c1, c2 = st.columns(2)
-        p_ape = c1.text_input("Primer Apellido")
-        s_ape = c2.text_input("Segundo Apellido (Obligatorio)")
+        st.markdown('<div class="section-header">INFORMACIÓN PERSONAL</div>', unsafe_allow_html=True)
+        nombres = st.text_input("Nombres", placeholder="Ej: Juan Carlos")
         
-        cargo = st.text_input("Cargo")
-        email = st.text_input("Correo Corporativo")
+        c1, c2 = st.columns(2)
+        p_ape = st.text_input("Primer Apellido", placeholder="Ej: Pérez")
+        s_ape = st.text_input("Segundo Apellido", placeholder="Ej: Armijos")
+        
+        st.markdown('<div class="section-header">PUESTO Y CONTACTO</div>', unsafe_allow_html=True)
+        cargo = st.text_input("Cargo", placeholder="Ej: Analista de Crédito Senior")
+        email = st.text_input("Correo Corporativo", placeholder="Ej: jperez@banco-solidario.com")
         
         c3, c4 = st.columns(2)
-        cel = c3.text_input("Celular (Opcional)")
-        ext = c4.text_input("Extensión (Opcional)")
+        cel = st.text_input("Celular (Opcional)", placeholder="Ej: 0998765432")
+        ext = st.text_input("Extensión (Opcional)", placeholder="Ej: 1234")
         
         st.markdown("<br>", unsafe_allow_html=True)
-        submit = st.form_submit_button("GENERAR FIRMA")
+        submit = st.form_submit_button("Generar Firma Institucional")
 
 if submit:
     if not (nombres and p_ape and s_ape and cargo and email):
-        st.error("Campos obligatorios incompletos.")
+        st.error("Por favor, complete los campos obligatorios.")
+    elif not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
+        st.error("El formato del correo electrónico es incorrecto.")
     else:
         nom = nombres.strip().split(" ")[0].capitalize()
         p_ape_f = p_ape.strip().capitalize()
@@ -151,10 +171,10 @@ if submit:
             "direccion": "Amazonas y Corea N36-69. Quito/ Matriz", "web": "www.banco-solidario.com"
         }
 
-        st.markdown('<div class="section-header">Resultado</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header">Resultado de la Generación</div>', unsafe_allow_html=True)
         img = generar_imagen_firma(info)
         if img:
             st.image(img)
             buf = io.BytesIO()
             img.save(buf, format="PNG")
-            st.download_button("📥 DESCARGAR PNG", buf.getvalue(), f"Firma_{p_ape_f}.png", "image/png")
+            st.download_button("Descargar en Formato PNG", buf.getvalue(), f"Firma_{p_ape_f}.png", "image/png")
